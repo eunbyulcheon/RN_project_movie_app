@@ -1,18 +1,14 @@
 import React from 'react';
-import {
-	ActivityIndicator,
-	Dimensions,
-	FlatList,
-	useColorScheme,
-} from 'react-native';
+import { Dimensions, FlatList, useColorScheme } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Swiper from 'react-native-swiper';
 import styled from 'styled-components/native';
 import Slide from '../components/Slide';
 import HMedia from '../components/HMedia';
-import VMedia from '../components/VMedia';
 import { useQuery, useQueryClient } from 'react-query';
 import { MovieResponse, moviesApi } from '../api';
+import Loader from '../components/Loader';
+import HList, { ListTitle } from '../components/HList';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -45,9 +41,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
 		isRefetchingNowPlaying || isRefetchingUpcoming || isRefetchingTrending;
 
 	return loading ? (
-		<Loader>
-			<ActivityIndicator />
-		</Loader>
+		<Loader />
 	) : upcomingData ? (
 		<FlatList
 			onRefresh={onRefresh}
@@ -79,27 +73,9 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
 						))}
 					</Swiper>
 
-					<ListContainer>
-						<ListTitle isDark={isDark}>Trending Movies</ListTitle>
-						{trendingData ? (
-							<FlatList
-								style={{ marginTop: 20 }}
-								data={trendingData.results}
-								keyExtractor={(item) => item.id + ''}
-								horizontal
-								showsHorizontalScrollIndicator={false}
-								contentContainerStyle={{ paddingHorizontal: 30 }}
-								ItemSeparatorComponent={VSeparator}
-								renderItem={({ item }) => (
-									<VMedia
-										posterPath={item.poster_path || ''}
-										originalTitle={item.original_title}
-										voteAverage={item.vote_average}
-									/>
-								)}
-							/>
-						) : null}
-					</ListContainer>
+					{trendingData ? (
+						<HList title="Trending Movies" data={trendingData.results} />
+					) : null}
 
 					<ComingSoonTitle isDark={isDark}>Coming Soon</ComingSoonTitle>
 				</>
@@ -119,29 +95,8 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
 	) : null;
 };
 
-const Loader = styled.View`
-	flex: 1;
-	justify-content: center;
-	align-items: center;
-`;
-
-const ListContainer = styled.View`
-	margin-bottom: 40px;
-`;
-
-const ListTitle = styled.Text<{ isDark: boolean }>`
-	color: ${(props) => (props.isDark ? '#fff' : props.theme.textColor)};
-	font-size: 18px;
-	font-weight: 600;
-	margin-left: 30px;
-`;
-
 const ComingSoonTitle = styled(ListTitle)`
 	margin-bottom: 20px;
-`;
-
-const VSeparator = styled.View`
-	width: 10px;
 `;
 
 const HSeparator = styled.View`
