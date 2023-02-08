@@ -1,21 +1,61 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { useColorScheme } from 'react-native';
+import * as SplashScreen from 'expo-splash-screen';
+import * as Font from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
+import { NavigationContainer } from '@react-navigation/native';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import Root from './navigation/Root';
+import { ThemeProvider } from 'styled-components/native';
+import { darkTheme, lightTheme } from './styled';
+
+// SplashScreen.preventAutoHideAsync();
+
+const queryClient = new QueryClient();
+
+const loadFonts = (fonts) => fonts.map((font) => Font.loadAsync(font));
+const loadAssets = (images) =>
+	images.map((image) => {
+		if (typeof image === 'string') {
+			return Image.prefetch(image);
+		} else {
+			return Asset.loadAsync(image);
+		}
+	});
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+	const [appIsReady, setAppIsReady] = useState(false);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+	useEffect(() => {
+		async function prepare() {
+			try {
+				SplashScreen.preventAutoHideAsync();
+				const fonts = loadFonts([Ionicons.font]);
+				await Promise.all([...fonts]);
+			} catch (e) {
+				console.warn(e);
+			} finally {
+				setAppIsReady(true);
+				SplashScreen.hideAsync();
+			}
+		}
+
+		prepare();
+	}, []);
+
+	const isDark = useColorScheme() === 'dark';
+
+	if (!appIsReady) {
+		SplashScreen.preventAutoHideAsync();
+	}
+
+	return (
+		<QueryClientProvider client={queryClient}>
+			<ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+				<NavigationContainer>
+					<Root />
+				</NavigationContainer>
+			</ThemeProvider>
+		</QueryClientProvider>
+	);
+}
