@@ -1,6 +1,8 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { useColorScheme } from 'react-native';
+import { TouchableOpacity, useColorScheme } from 'react-native';
 import styled from 'styled-components/native';
+import { Movie } from '../api';
 import Poster from './Poster';
 import Votes from './Votes';
 
@@ -10,6 +12,7 @@ interface HMediaProps {
 	overview: string;
 	releaseDate?: string;
 	voteAverage?: number;
+	fullData: Movie;
 }
 
 const HMedia: React.FC<HMediaProps> = ({
@@ -18,29 +21,35 @@ const HMedia: React.FC<HMediaProps> = ({
 	overview,
 	releaseDate,
 	voteAverage,
+	fullData,
 }) => {
 	const isDark = useColorScheme() === 'dark';
+	const { navigate } = useNavigation();
+	const goToDetail = () =>
+		navigate('Stacks', { screen: 'Detail', params: { ...fullData } });
 
 	return (
-		<HMovie>
-			<Poster path={posterPath} />
-			<HColumn>
-				<Title isDark={isDark}>
-					{originalTitle.length > 30
-						? `${originalTitle.slice(0, 30)}...`
-						: originalTitle}
-				</Title>
-				{releaseDate ? (
-					<Release>{new Date(releaseDate).toLocaleDateString('ko')}</Release>
-				) : null}
-				{voteAverage ? <Votes rating={voteAverage} /> : null}
-				<Overview>
-					{overview !== '' && overview.length > 140
-						? `${overview.slice(0, 140)}...`
-						: overview}
-				</Overview>
-			</HColumn>
-		</HMovie>
+		<TouchableOpacity onPress={goToDetail}>
+			<HMovie>
+				<Poster path={posterPath} />
+				<HColumn>
+					<Title isDark={isDark}>
+						{originalTitle.length > 30
+							? `${originalTitle.slice(0, 30)}...`
+							: originalTitle}
+					</Title>
+					{releaseDate ? (
+						<Release>{new Date(releaseDate).toLocaleDateString('ko')}</Release>
+					) : null}
+					{voteAverage ? <Votes rating={voteAverage} /> : null}
+					<Overview>
+						{overview !== '' && overview.length > 140
+							? `${overview.slice(0, 140)}...`
+							: overview}
+					</Overview>
+				</HColumn>
+			</HMovie>
+		</TouchableOpacity>
 	);
 };
 
