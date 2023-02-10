@@ -5,7 +5,7 @@ import Swiper from 'react-native-swiper';
 import styled from 'styled-components/native';
 import Slide from '../components/Slide';
 import HMedia from '../components/HMedia';
-import { useQuery, useQueryClient } from 'react-query';
+import { useInfiniteQuery, useQuery, useQueryClient } from 'react-query';
 import { MovieResponse, moviesApi } from '../api';
 import Loader from '../components/Loader';
 import HList, { ListTitle } from '../components/HList';
@@ -19,8 +19,21 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
 
 	const { isLoading: nowPlayingLoading, data: nowPlayingData } =
 		useQuery<MovieResponse>(['movies', 'nowPlaying'], moviesApi.nowPlaying);
-	const { isLoading: upcomingLoading, data: upcomingData } =
-		useQuery<MovieResponse>(['movies', 'upcoming'], moviesApi.upcoming);
+	const {
+		isLoading: upcomingLoading,
+		data: upcomingData,
+		hasNextPage,
+		fetchNextPage,
+	} = useInfiniteQuery<MovieResponse>(
+		['movies', 'upcoming'],
+		moviesApi.upcoming,
+		{
+			getNextPageParam: (currentPage) => {
+				const nextPage = currentPage.page + 1;
+				return nextPage > currentPage.total_pages ? null : nextPage;
+			},
+		}
+	);
 	const { isLoading: trendingLoading, data: trendingData } =
 		useQuery<MovieResponse>(['movies', 'trending'], moviesApi.trending);
 
@@ -32,12 +45,21 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
 
 	const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
 
+	const loadMore = () => {
+		if (hasNextPage) {
+			fetchNextPage();
+		}
+	};
+
 	return loading ? (
 		<Loader />
 	) : upcomingData ? (
 		<FlatList
+			onEndReached={loadMore}
+			onEndReachedThreshold={0}
 			onRefresh={onRefresh}
 			refreshing={refreshing}
+			style={{ marginBottom: 20 }}
 			ListHeaderComponent={
 				<>
 					<Swiper
@@ -73,7 +95,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
 					<ComingSoonTitle isDark={isDark}>Coming Soon</ComingSoonTitle>
 				</>
 			}
-			data={upcomingData.results}
+			data={upcomingData.pages.map((page) => page.results).flat()}
 			keyExtractor={(item) => item.id + ''}
 			ItemSeparatorComponent={HSeparator}
 			renderItem={({ item }) => (
