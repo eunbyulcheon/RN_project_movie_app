@@ -38,7 +38,7 @@ const Detail: React.FC<DetailScreenProps> = ({
 	const shareMedia = async () => {
 		const isAndroid = Platform.OS === 'android';
 		const homepage = isMovie
-			? `https://www.imdb.com/title/${data.imdb_id}/`
+			? `https://www.imdb.com/title/${data?.imdb_id}/`
 			: data?.homepage;
 
 		if (isAndroid) {
@@ -51,7 +51,7 @@ const Detail: React.FC<DetailScreenProps> = ({
 			});
 		} else {
 			await Share.share({
-				url: homepage,
+				url: homepage || '',
 				title:
 					'original_title' in params
 						? params.original_title
@@ -107,7 +107,15 @@ const Detail: React.FC<DetailScreenProps> = ({
 					</Title>
 				</Column>
 			</Header>
+
 			<Data>
+				<Info>
+					{data?.genres.map((genre) => (
+						<Genre>{genre.name}</Genre>
+					))}
+					<Rate>{data?.adult === true ? 'R' : 'G'}</Rate>
+					<Time>{data?.runtime}m</Time>
+				</Info>
 				<Overview>{params.overview}</Overview>
 				{isLoading ? <Loader /> : null}
 				{data?.videos?.results?.map((video) =>
@@ -116,7 +124,7 @@ const Detail: React.FC<DetailScreenProps> = ({
 							key={video.key}
 							onPress={() => openYoutubeLink(video.key)}
 						>
-							<Ionicons name="logo-youtube" color="white" size={24} />
+							<Ionicons name="logo-youtube" color="red" size={24} />
 							<BtnText>{video.name}</BtnText>
 						</VideoBtn>
 					) : null
@@ -155,6 +163,26 @@ const Data = styled.View`
 	padding: 0px 20px;
 `;
 
+const Info = styled.View`
+	flex-direction: row;
+	margin-top: 20px;
+`;
+
+const Genre = styled.Text`
+	padding: 5px;
+	margin-right: 5px;
+	border: 1px solid #fff;
+	border-radius: 10px;
+	color: #fff;
+	font-size: 10px;
+`;
+
+const Rate = styled(Genre)`
+	padding: 5px 7px;
+`;
+
+const Time = styled(Genre)``;
+
 const Overview = styled.Text`
 	margin: 20px 0px;
 	color: ${(props) => props.theme.textColor};
@@ -162,12 +190,16 @@ const Overview = styled.Text`
 
 const VideoBtn = styled.TouchableOpacity`
 	flex-direction: row;
+	margin: 20px auto;
+	border-radius: 25px;
+	width: 100%;
+	padding: 10px 30%;
+	background-color: rgba(0, 0, 0, 0.4);
 `;
 
 const BtnText = styled.Text`
 	color: #fff;
 	font-weight: 500;
-	margin-bottom: 10px;
 	line-height: 24px;
 	margin-left: 10px;
 `;
