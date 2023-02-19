@@ -9,19 +9,9 @@ import Root from './navigation/Root';
 import { ThemeProvider } from 'styled-components/native';
 import { darkTheme, lightTheme } from './styled';
 
-// SplashScreen.preventAutoHideAsync();
-
 const queryClient = new QueryClient();
 
 const loadFonts = (fonts) => fonts.map((font) => Font.loadAsync(font));
-const loadAssets = (images) =>
-	images.map((image) => {
-		if (typeof image === 'string') {
-			return Image.prefetch(image);
-		} else {
-			return Asset.loadAsync(image);
-		}
-	});
 
 export default function App() {
 	const [appIsReady, setAppIsReady] = useState(false);
