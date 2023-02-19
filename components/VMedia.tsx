@@ -22,7 +22,10 @@ const VMedia: React.FC<VMediaProps> = ({
 	const isDark = useColorScheme() === 'dark';
 	const { navigate } = useNavigation();
 	const goToDetail = () =>
-		navigate('Stacks', { screen: 'Detail', params: { ...fullData } });
+		navigate('Stacks', {
+			screen: 'Detail',
+			params: { ...fullData },
+		});
 
 	return (
 		<TouchableOpacity onPress={goToDetail}>
