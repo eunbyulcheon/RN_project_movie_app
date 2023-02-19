@@ -56,7 +56,6 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
 	) : upcomingData ? (
 		<FlatList
 			onEndReached={loadMore}
-			onEndReachedThreshold={0}
 			onRefresh={onRefresh}
 			refreshing={refreshing}
 			style={{ marginBottom: 20 }}
