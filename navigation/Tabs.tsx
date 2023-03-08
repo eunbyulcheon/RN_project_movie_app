@@ -6,6 +6,7 @@ import Search from '../screens/Search';
 import { Ionicons } from '@expo/vector-icons';
 import { useColorScheme } from 'react-native';
 import { color } from '../colors';
+import Profile from '../screens/Profile';
 
 const Tab = createBottomTabNavigator();
 
@@ -75,6 +76,21 @@ const Tabs = () => {
 						return (
 							<Ionicons
 								name={focused ? 'search' : 'search-outline'}
+								color={color}
+								size={size}
+							/>
+						);
+					},
+				}}
+			/>
+			<Tab.Screen
+				name="Profile"
+				component={Profile}
+				options={{
+					tabBarIcon: ({ focused, color, size }) => {
+						return (
+							<Ionicons
+								name={focused ? 'person-circle-sharp' : 'person-circle-outline'}
 								color={color}
 								size={size}
 							/>

@@ -1,15 +1,70 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
+import auth from '@react-native-firebase/auth';
 import styled from 'styled-components/native';
 import { color } from '../colors';
+import { ActivityIndicator, Alert } from 'react-native';
 
 const Login = ({ navigation: { navigate } }) => {
+	const pwRef = useRef();
+	const [email, setEmail] = useState('');
+	const [pw, setPw] = useState('');
+	const [loading, setLoading] = useState(false);
+
+	const onSubmitEmail = () => {
+		pwRef.current.focus();
+	};
+
+	const onSubmitPw = async () => {
+		if (email === '' || pw === '') {
+			return Alert.alert('Complete the form.');
+		}
+		if (loading) return;
+		setLoading(true);
+		try {
+			await auth().signInWithEmailAndPassword(email, pw);
+		} catch (e: any) {
+			switch (e.code) {
+				case 'auth/invalid-email': {
+					Alert.alert('Enter a valid email.');
+				}
+				case 'auth/user-not-found': {
+					Alert.alert('User not found.');
+				}
+				case 'auth/wrong-password': {
+					Alert.alert('Wrong Password');
+				}
+			}
+		}
+	};
+
 	return (
 		<Container>
 			<Title>Welcome!</Title>
-			<TextInput placeholder="Email" />
-			<TextInput placeholder="Password" />
-			<Btn bgColor="#20bf6b">
-				<BtnText>Login</BtnText>
+			<TextInput
+				placeholder="Email"
+				value={email}
+				onChangeText={(text) => setEmail(text)}
+				onSubmitEditing={onSubmitEmail}
+				returnKeyType="next"
+				keyboardType="email-address"
+				autoCapitalize="none"
+				autoCorrect={false}
+			/>
+			<TextInput
+				placeholder="Password"
+				ref={pwRef}
+				value={pw}
+				onChangeText={(text) => setPw(text)}
+				onSubmitEditing={onSubmitPw}
+				returnKeyType="done"
+				secureTextEntry
+			/>
+			<Btn bgColor="#20bf6b" onPress={onSubmitPw}>
+				{loading ? (
+					<ActivityIndicator color="white" size={20} />
+				) : (
+					<BtnText>Login</BtnText>
+				)}
 			</Btn>
 			<Btn bgColor="#ff5e57" onPress={() => navigate('SignUp')}>
 				<BtnText>Create Account</BtnText>

@@ -22,7 +22,7 @@ const Signup = () => {
 		setLoading(true);
 		try {
 			await auth().createUserWithEmailAndPassword(email, pw);
-		} catch (e) {
+		} catch (e: any) {
 			switch (e.code) {
 				case 'auth/weak-password': {
 					Alert.alert('Insert a stronger password');
