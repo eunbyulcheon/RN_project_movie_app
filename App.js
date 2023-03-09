@@ -6,10 +6,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Root from './navigation/Root';
+import SignInNav from './navigation/SigninStack';
 import { ThemeProvider } from 'styled-components/native';
 import { darkTheme, lightTheme } from './styled';
-import SignInNav from './navigation/SigninStack';
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,13 @@ export default function App() {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const isDark = useColorScheme() === 'dark';
 
+	const googleSigninConfiguration = () => {
+		GoogleSignin.configure({
+			webClientId:
+				'16682058471-7v2115o4ior94kg65dbnbmbc7q5jfh6h.apps.googleusercontent.com',
+		});
+	};
+
 	useEffect(() => {
 		auth().onAuthStateChanged((user) => {
 			if (user) {
@@ -28,6 +36,7 @@ export default function App() {
 				setIsLoggedIn(false);
 			}
 		});
+		googleSigninConfiguration();
 	}, []);
 
 	useEffect(() => {

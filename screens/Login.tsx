@@ -1,17 +1,19 @@
 import React, { useRef, useState } from 'react';
+import { ActivityIndicator, Alert, TextInput } from 'react-native';
 import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import styled from 'styled-components/native';
+import { Ionicons } from '@expo/vector-icons';
 import { color } from '../colors';
-import { ActivityIndicator, Alert } from 'react-native';
 
 const Login = ({ navigation: { navigate } }) => {
-	const pwRef = useRef();
+	const pwRef = useRef<TextInput>();
 	const [email, setEmail] = useState('');
 	const [pw, setPw] = useState('');
 	const [loading, setLoading] = useState(false);
 
 	const onSubmitEmail = () => {
-		pwRef.current.focus();
+		pwRef.current?.focus();
 	};
 
 	const onSubmitPw = async () => {
@@ -37,10 +39,16 @@ const Login = ({ navigation: { navigate } }) => {
 		}
 	};
 
+	const onGoogleButtonPress = async () => {
+		const { idToken } = await GoogleSignin.signIn();
+		const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+		return auth().signInWithCredential(googleCredential);
+	};
+
 	return (
 		<Container>
 			<Title>Welcome!</Title>
-			<TextInput
+			<Input
 				placeholder="Email"
 				value={email}
 				onChangeText={(text) => setEmail(text)}
@@ -50,7 +58,7 @@ const Login = ({ navigation: { navigate } }) => {
 				autoCapitalize="none"
 				autoCorrect={false}
 			/>
-			<TextInput
+			<Input
 				placeholder="Password"
 				ref={pwRef}
 				value={pw}
@@ -65,6 +73,16 @@ const Login = ({ navigation: { navigate } }) => {
 				) : (
 					<BtnText>Login</BtnText>
 				)}
+			</Btn>
+			<Btn
+				bgColor="#fff"
+				style={{ flexDirection: 'row' }}
+				onPress={() => onGoogleButtonPress()}
+			>
+				<Ionicons name="logo-google" size={24} color="black" />
+				<BtnText style={{ color: '#000', marginLeft: 10 }}>
+					Login with Google
+				</BtnText>
 			</Btn>
 			<Btn bgColor="#ff5e57" onPress={() => navigate('SignUp')}>
 				<BtnText>Create Account</BtnText>
@@ -88,7 +106,7 @@ const Title = styled.Text`
 	color: #fff;
 `;
 
-export const TextInput = styled.TextInput`
+export const Input = styled.TextInput`
 	width: 100%;
 	height: 50px;
 	margin-vertical: 5px;
@@ -97,14 +115,13 @@ export const TextInput = styled.TextInput`
 	border-radius: 25px;
 `;
 
-const Btn = styled.TouchableOpacity<{ bgColor: string }>`
+const Btn = styled.TouchableOpacity<{ bgColor?: string }>`
 	width: 100%;
 	height: 50px;
 	margin-vertical: 5px;
 	border-radius: 25px;
 	align-items: center;
 	justify-content: center;
-
 	background-color: ${(props) => props.bgColor};
 `;
 
@@ -112,6 +129,10 @@ const BtnText = styled.Text`
 	color: #fff;
 	font-size: 16px;
 	font-weight: 500;
+`;
+
+const GoogleText = styled.Text`
+	color: #000;
 `;
 
 export default Login;

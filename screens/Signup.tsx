@@ -1,17 +1,17 @@
 import React, { useRef, useState } from 'react';
 import auth from '@react-native-firebase/auth';
-import { ActivityIndicator, Alert } from 'react-native';
+import { ActivityIndicator, Alert, TextInput } from 'react-native';
 import styled from 'styled-components/native';
-import { Container, TextInput } from './Login';
+import { Container, Input } from './Login';
 
 const Signup = () => {
-	const pwRef = useRef();
+	const pwRef = useRef<TextInput>();
 	const [email, setEmail] = useState('');
 	const [pw, setPw] = useState('');
 	const [loading, setLoading] = useState(false);
 
 	const onSubmitEmail = () => {
-		pwRef.current.focus();
+		pwRef.current?.focus();
 	};
 
 	const onSubmitPw = async () => {
@@ -39,7 +39,8 @@ const Signup = () => {
 
 	return (
 		<Container>
-			<TextInput
+			<Title>Create Account</Title>
+			<Input
 				value={email}
 				placeholder="Email"
 				onChangeText={(text) => setEmail(text)}
@@ -49,7 +50,7 @@ const Signup = () => {
 				autoCorrect={false}
 				keyboardType="email-address"
 			/>
-			<TextInput
+			<Input
 				ref={pwRef}
 				value={pw}
 				placeholder="Password"
@@ -68,6 +69,13 @@ const Signup = () => {
 		</Container>
 	);
 };
+
+const Title = styled.Text`
+	margin-bottom: 60px;
+	color: #fff;
+	font-size: 30px;
+	font-weight: 500;
+`;
 
 const Btn = styled.TouchableOpacity`
 	width: 100%;
