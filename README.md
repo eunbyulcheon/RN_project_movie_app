@@ -16,7 +16,21 @@ A mobile application that allows users to discover and explore movies and tv sho
 
 ## Functionality 
 
-### A. Movie screen 
+### A. SignUp & SignIn screen
+
+https://user-images.githubusercontent.com/75746836/224249929-417a3e39-7331-4bb2-8291-e25e604dd527.mov
+
+https://user-images.githubusercontent.com/75746836/224250277-5c6ed4f8-a53a-41a5-b2b7-e603ce031d86.mov
+
+<br>
+
+| **Description** | ✔️ Dsiplays SignIn screen which allows users to authenticate themselves with email, password, or with Google Account. <br> ✔️ Displays a Create Account Screen.|
+| :---: | :--- |
+| **Tasks** | ✔️ The `onAuthStateChanged` listener of Firebase Ahentication determines if the user is signed in or not, and depending on the state, it directs the user to the Login screen or the Home (Movie) screen. <br> ✔️ Create Account Screen saves the user's email and password to the Firebase database they are free of errors. <br> ✔️ Login Screen authenticates the user's email and password with Firebase's signin method. <br> ✔️ Firebase Social Authentication with Google. |
+
+<br>
+
+### B. Movie screen 
 
 https://user-images.githubusercontent.com/75746836/223316614-1aed733b-5318-4969-af9b-df8dce765868.mp4
 
@@ -28,7 +42,7 @@ https://user-images.githubusercontent.com/75746836/223316614-1aed733b-5318-4969-
 
 <br>
 
-### B. TV screen
+### C. TV screen
 
 https://user-images.githubusercontent.com/75746836/223320502-1aca6e26-da22-4c6b-b4c6-c372906ab9a0.mp4
 
@@ -40,7 +54,7 @@ https://user-images.githubusercontent.com/75746836/223320502-1aca6e26-da22-4c6b-
 
 <br>
 
-### C. Search screen 
+### D. Search screen 
 
 https://user-images.githubusercontent.com/75746836/223321304-8753e7b6-9a84-4faa-a26b-5dd94ff7f4e6.mp4
 
@@ -52,7 +66,7 @@ https://user-images.githubusercontent.com/75746836/223321304-8753e7b6-9a84-4faa-
 
 <br>
 
-### D. Detail screen
+### E. Detail screen
 
 https://user-images.githubusercontent.com/75746836/223322761-96720b19-7918-4d4f-97fc-d1d8e3188ed5.mp4
 
