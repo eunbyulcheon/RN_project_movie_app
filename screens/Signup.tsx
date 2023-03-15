@@ -34,6 +34,9 @@ const Signup = () => {
 					Alert.alert('Insert a valid email');
 				}
 			}
+			setLoading(false);
+			setEmail('');
+			setPw('');
 		}
 	};
 

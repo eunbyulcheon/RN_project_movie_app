@@ -1,6 +1,7 @@
 import React from 'react';
 import auth from '@react-native-firebase/auth';
 import styled from 'styled-components/native';
+import ImageUpload from '../components/ImageUpload';
 
 const Profile = () => {
 	const logOut = async () => {
@@ -11,8 +12,8 @@ const Profile = () => {
 		<Container>
 			<Wrapper>
 				<UserInfo>
-					<Image />
-					<Id>My name</Id>
+					<ImageUpload />
+					<Id>username</Id>
 				</UserInfo>
 
 				<Btn onPress={logOut}>
@@ -36,13 +37,6 @@ const Wrapper = styled.View`
 const UserInfo = styled.View`
 	flex-direction: row;
 	align-items: center;
-`;
-
-const Image = styled.View`
-	width: 70px;
-	height: 70px;
-	background-color: #fff;
-	border-radius: 35px;
 `;
 
 const Id = styled.Text`
